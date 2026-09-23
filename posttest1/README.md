@@ -12,5 +12,5 @@ Dibuat dua objek lapangan, yaitu Lapangan A dan Lapangan B, serta dua objek peny
 4. Uji Encapsulation
 Getter digunakan untuk mengambil harga Lapangan A dan saldo Naufal. Kemudian setter digunakan untuk mengubah harga dan saldo menggunakan data yang valid. Setelah itu dilakukan pengujian dengan data negatif untuk membuktikan bahwa validasi setter bekerja. Data yang tidak valid akan ditolak dan menghasilkan ValueError, kemudian error ditangani menggunakan try-except sehingga program tetap berjalan.
 
-Uji Atribut Kelas
+5. Uji Atribut Kelas
 Program menampilkan jumlah lapangan, jumlah penyewa, dan jumlah transaksi yang telah dibuat. Data tersebut menggunakan atribut kelas sehingga dapat menghitung jumlah objek yang terdaftar dalam sistem.

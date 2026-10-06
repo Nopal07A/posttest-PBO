@@ -1,3 +1,48 @@
+
+class Lapangan:
+    nama_tempat = "Futsal Arena"
+    lokasi = "Samarinda"
+    total_lapangan = 0
+
+    def __init__(self, nama, jenis, harga):
+        self.nama = nama
+        self.jenis = jenis
+        self.status = "Tersedia"
+        self.__harga = harga
+        Lapangan.total_lapangan += 1
+
+    @property
+    def harga(self):
+        return self.__harga
+
+    @harga.setter
+    def harga(self, harga_baru):
+        if harga_baru <= 0:
+            raise ValueError("Harga lapangan invalid")
+        self.__harga = harga_baru
+
+    @classmethod
+    def ubah_nama_tempat(cls, nama_baru):
+        cls.nama_tempat = nama_baru
+        print(f"\nNama Tempat : {cls.nama_tempat}")
+
+    def tampilkan_info(self):
+        print(f"\nLapangan\t: {self.nama}")
+        print(f"Jenis\t\t: {self.jenis}")
+        print(f"Harga\t\t: Rp{self.harga:,}")
+        print(f"Status\t\t: {self.status}")
+
+    def pesan(self):
+        if self.status == "Tersedia":
+            self.status = "Terisi"
+            return True
+        return False
+
+    @staticmethod
+    def validasi_nama(nama):
+        return len(nama.strip()) >= 3
+
+
 class Penyewa:
     nama_sistem = "Sistem Penyewaan Futsal"
     status_member = "Aktif"
@@ -47,6 +92,10 @@ class Member(Penyewa):
         super().__init__(nama, no_hp)
         self.poin = poin
 
+    def tambah_poin(self, jumlah):
+        if jumlah > 0:
+            self.poin += jumlah
+
     def tampilkan_info(self):
         print(f"\nNama\t\t: {self._nama}")
         print(f"No. HP\t\t: {self.no_hp}")
@@ -59,6 +108,9 @@ class PelangganVIP(Penyewa):
         super().__init__(nama, no_hp)
         self.diskon_vip = diskon_vip
 
+    def hitung_diskon_vip(self, total):
+        return total * self.diskon_vip / 100
+
     def tampilkan_info(self):
         print(f"\nNama\t\t: {self._nama}")
         print(f"No. HP\t\t: {self.no_hp}")
@@ -66,60 +118,18 @@ class PelangganVIP(Penyewa):
         print(f"Diskon VIP\t: {self.diskon_vip}%")
 
 
-class Lapangan:
-    nama_tempat = "Futsal Arena"
-    lokasi = "Samarinda"
-    total_lapangan = 0
-
-    def __init__(self, nama, jenis, harga):
-        self.nama = nama
-        self.jenis = jenis
-        self.status = "Tersedia"
-        self.__harga = harga
-        Lapangan.total_lapangan += 1
-
-    @property
-    def harga(self):
-        return self.__harga
-
-    @harga.setter
-    def harga(self, harga_baru):
-        if harga_baru <= 0:
-            raise ValueError("Harga lapangan invalid")
-        self.__harga = harga_baru
-
-    @classmethod
-    def ubah_nama_tempat(cls, nama_baru):
-        cls.nama_tempat = nama_baru
-        print(f"\nNama Tempat : {cls.nama_tempat}")
-
-    def tampilkan_info(self):
-        print(f"\nLapangan\t: {self.nama}")
-        print(f"Jenis\t\t: {self.jenis}")
-        print(f"Harga\t\t: Rp{self.harga:,}")
-        print(f"Status\t\t: {self.status}")
-
-    def pesan(self):
-        if self.status == "Tersedia":
-            self.status = "Terisi"
-            return True
-        return False
-
-    @staticmethod
-    def validasi_nama(nama):
-        return len(nama.strip()) >= 3
-
-
 class Struk:
-    def __init__(self, penyewa, lapangan, total):
+    def __init__(self, penyewa, lapangan, jam, total):
         self.penyewa = penyewa
         self.lapangan = lapangan
+        self.jam = jam
         self.total = total
 
-    def tampilkan(self, jam):
-        print(f"\nPenyewa\t\t: {self.penyewa.nama}")
+    def tampilkan_struk(self):
+        print("\n=== STRUK PEMBAYARAN ===")
+        print(f"Penyewa\t\t: {self.penyewa.nama}")
         print(f"Lapangan\t: {self.lapangan.nama}")
-        print(f"Lama Sewa\t: {jam} jam")
+        print(f"Lama Sewa\t: {self.jam} jam")
         print(f"Total Bayar\t: Rp{self.total:,.0f}")
 
 
@@ -155,9 +165,10 @@ class Penyewaan:
         self.__struk = Struk(
             self.penyewa,
             self.lapangan,
+            self.jam,
             self.total
         )
-        self.__struk.tampilkan(self.jam)
+        self.__struk.tampilkan_struk()
 
     @classmethod
     def ubah_pajak(cls, pajak_baru):
@@ -174,10 +185,11 @@ lapangan1 = Lapangan("Lapangan A", "Vinyl", 100000)
 lapangan2 = Lapangan("Lapangan B", "Sintetis", 120000)
 
 naufal = Member("Naufal", "081234567890", 150)
-andi = PelangganVIP("Andi", "082345678901", 15)
+andi = PelangganVIP("Andi", "082345678901", 20)
 
 Penyewaan.ubah_pajak(0.10)
 Lapangan.ubah_nama_tempat("Golden Futsal")
+Penyewa.ubah_status_member("Aktif")
 
 print("\n=== VALIDASI DATA ===")
 
@@ -214,6 +226,23 @@ sewa2.hitung_total()
 sewa1.tampilkan_struk()
 sewa2.tampilkan_struk()
 
+print("\n=== FITUR MEMBER ===")
+
+naufal.tambah_poin(50)
+print(f"Poin Naufal Setelah Ditambah\t: {naufal.poin}")
+
+print("\n=== FITUR VIP ===")
+
+diskon_vip = andi.hitung_diskon_vip(sewa2.total)
+print(f"Diskon VIP Andi\t\t: Rp{diskon_vip:,.0f}")
+
+print("\n=== PESAN LAPANGAN ===")
+
+if lapangan1.pesan():
+    print("Lapangan A berhasil dipesan")
+else:
+    print("Lapangan A tidak tersedia")
+
 print("\n=== SETTER VALID ===")
 
 print(f"Harga Awal\t: Rp{lapangan1.harga:,}")
@@ -242,6 +271,8 @@ diskon = Penyewaan.hitung_diskon(500000, 10)
 print(f"Diskon 10%\t: Rp{diskon:,.0f}")
 
 print("\n=== ATRIBUT KELAS ===")
+
 print(f"Total Lapangan\t: {Lapangan.total_lapangan}")
 print(f"Total Penyewa\t: {Penyewa.total_penyewa}")
 print(f"Total Transaksi\t: {Penyewaan.total_transaksi}")
+

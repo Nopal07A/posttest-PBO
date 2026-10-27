@@ -23,7 +23,7 @@ Fitur yang tersedia meliputi pengelolaan data lapangan, data penyewa, layanan pe
 
 ## Class Diagram
 
-
+![UML Class Diagram](uml-penyewaan-futsal%281%29.jpg)
 
 ### Relasi UML
 
